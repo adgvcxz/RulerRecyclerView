@@ -39,14 +39,11 @@ public class RulerSnapHelper extends RecyclerView.OnScrollListener {
                     int position = layoutManager.getPosition(view);
                     if (position == 0) {
                         offset = -(view.getLeft() % mScaleWidth);
-                        Log.e("zhaow", "offset3    " + offset);
                     } else if (position == recyclerView.getAdapter().getItemCount() - 1) {
                         offset = mScaleWidth - ((view.getRight() - mRecyclerView.getWidth()) % mScaleWidth);
-                        Log.e("zhaow", "offset2    " + offset);
                     } else {
-                        int middle = (view.getRight() + view.getLeft()) / 2;
+//                        int middle = (view.getRight() + view.getLeft()) / 2;
                         offset = (mRecyclerView.getWidth() / 2 - view.getLeft()) % mScaleWidth;
-                        Log.e("zhaow", "offset1    " + offset);
                     }
                     if (offset != 0) {
                         if (offset < mScaleWidth / 2) {

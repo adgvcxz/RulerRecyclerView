@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ac_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(new RulerAdapter.Builder().setWidthAndSpacing(recyclerView, 3, 57).build());
+        recyclerView.setAdapter(new RulerAdapter.Builder().setWidthAndSpacing(recyclerView, 3, 57).setNumberAndGroup(19, 9).build());
 //        new RulerSnapHelper().attachToRecyclerView(recyclerView);
     }
 }

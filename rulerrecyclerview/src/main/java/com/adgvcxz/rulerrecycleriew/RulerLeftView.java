@@ -26,7 +26,7 @@ public class RulerLeftView extends LinearLayout {
         addView(view, new LayoutParams(lineWidth, height));
         View spacing = new View(context);
         addView(spacing, new LayoutParams(lineSpacing, 1));
-        for (int i = 0; i < number - 1; i++) {
+        for (int i = 0; i < number; i++) {
             view = new View(context);
             view.setLayoutParams(new LayoutParams(lineWidth, height / 2));
             view.setBackgroundColor(Color.BLUE);
@@ -35,5 +35,6 @@ public class RulerLeftView extends LinearLayout {
             spacing.setLayoutParams(new LayoutParams(lineSpacing, 1));
             addView(spacing);
         }
+        setBackgroundColor(Color.DKGRAY);
     }
 }

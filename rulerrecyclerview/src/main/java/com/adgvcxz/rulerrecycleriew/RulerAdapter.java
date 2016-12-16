@@ -1,6 +1,7 @@
 package com.adgvcxz.rulerrecycleriew;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -18,14 +19,15 @@ public class RulerAdapter extends RecyclerView.Adapter {
 
     private int mLineWidth;
     private int mLineSpacing;
-    private int mUnitWidth;
 
     private LayoutInflater mInflater;
     private float mStartValue = 0;
     private float mEndValue = 100;
     private float mPerValue;
-    private int mMax = 10;
-    private int mLineNumber = 100;
+    private int mMax = 9;
+    private int mLineNumber = 19;
+    private int mLeftNumber;
+    private int mRightNumber;
 
     private RulerAdapter() {
 
@@ -37,17 +39,18 @@ public class RulerAdapter extends RecyclerView.Adapter {
 
         if (viewType == LINE) {
             RulerItemView view = new RulerItemView(parent.getContext());
-            view.set(mMax, mMax / 2, parent.getHeight() / 2, mLineWidth, mLineSpacing);
+            view.set(mMax, mLeftNumber, parent.getHeight() / 2, mLineWidth, mLineSpacing);
             return new RecyclerView.ViewHolder(view) {
             };
         } else if (viewType == RIGHT_SPACING) {
             RulerRightView view = new RulerRightView(parent.getContext());
-            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getHeight() / 2, mMax / 2, mLineWidth, mLineSpacing);
+            int remind = (mLineNumber + 1) % mMax + mMax - mRightNumber - 1;
+            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getHeight() / 2, mRightNumber, remind, mLineWidth, mLineSpacing);
             return new RecyclerView.ViewHolder(view) {
             };
         } else {
             RulerLeftView view = new RulerLeftView(parent.getContext());
-            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getHeight() / 2, mMax / 2, mLineWidth, mLineSpacing);
+            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getHeight() / 2, mLeftNumber, mLineWidth, mLineSpacing);
             return new RecyclerView.ViewHolder(view) {
             };
         }
@@ -60,7 +63,7 @@ public class RulerAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return (int) Math.floor(mLineNumber / (float) mMax);
+        return (int) Math.ceil((mLineNumber + 1) / (float) mMax);
     }
 
     @Override
@@ -84,7 +87,6 @@ public class RulerAdapter extends RecyclerView.Adapter {
         public Builder setWidthAndSpacing(RecyclerView recyclerView, int line, int spacing) {
             mRulerAdapter.mLineWidth = line;
             mRulerAdapter.mLineSpacing = spacing;
-            mRulerAdapter.mUnitWidth = mRulerAdapter.mLineWidth + 2 * (spacing / 2);
             new RulerSnapHelper().attachToRecyclerView(recyclerView, line + spacing);
             return this;
         }
@@ -92,6 +94,8 @@ public class RulerAdapter extends RecyclerView.Adapter {
         public Builder setNumberAndGroup(int number, int perGroup) {
             mRulerAdapter.mLineNumber = number;
             mRulerAdapter.mMax = perGroup;
+            mRulerAdapter.mLeftNumber = (int) (Math.ceil((float)perGroup - 1) / 2);
+            mRulerAdapter.mRightNumber = (int) (Math.floor((float)perGroup - 1) / 2);
             return this;
         }
 
