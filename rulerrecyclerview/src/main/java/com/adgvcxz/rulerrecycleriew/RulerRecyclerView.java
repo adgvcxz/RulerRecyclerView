@@ -71,7 +71,7 @@ public class RulerRecyclerView extends RecyclerView {
     public void setLineWidthAndSpacing(int width, int spacing) {
         mLineWidth = width;
         mLineSpacing = spacing;
-        setAdapter(new RulerAdapter.Builder().setWidthAndSpacing(width, spacing).build());
+//        setAdapter(new RulerAdapter.Builder().setWidthAndSpacing(width, spacing).build());
     }
 
 }

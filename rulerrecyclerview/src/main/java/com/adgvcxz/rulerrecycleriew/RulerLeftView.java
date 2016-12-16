@@ -12,9 +12,6 @@ import android.widget.LinearLayout;
 
 public class RulerLeftView extends LinearLayout {
 
-    private View mMaxView;
-    private View[] mMiddleView;
-    private View[] mMinView;
 
     public RulerLeftView(Context context) {
         super(context);
@@ -24,17 +21,16 @@ public class RulerLeftView extends LinearLayout {
         Context context = getContext();
         View leftView = new View(context);
         addView(leftView, new LayoutParams(width, 1));
-        mMaxView = new View(context);
-        mMaxView.setBackgroundColor(Color.RED);
-        addView(mMaxView, new LayoutParams(lineWidth, height));
+        View view = new View(context);
+        view.setBackgroundColor(Color.RED);
+        addView(view, new LayoutParams(lineWidth, height));
         View spacing = new View(context);
         addView(spacing, new LayoutParams(lineSpacing, 1));
-        mMinView = new View[number - 1];
         for (int i = 0; i < number - 1; i++) {
-            mMinView[i] = new View(context);
-            mMinView[i].setLayoutParams(new LayoutParams(lineWidth, height / 2));
-            mMinView[i].setBackgroundColor(Color.BLUE);
-            addView(mMinView[i]);
+            view = new View(context);
+            view.setLayoutParams(new LayoutParams(lineWidth, height / 2));
+            view.setBackgroundColor(Color.BLUE);
+            addView(view);
             spacing = new View(context);
             spacing.setLayoutParams(new LayoutParams(lineSpacing, 1));
             addView(spacing);

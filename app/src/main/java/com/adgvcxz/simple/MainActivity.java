@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.adgvcxz.rulerrecycleriew.RulerAdapter;
-import com.adgvcxz.rulerrecycleriew.RulerRecyclerView;
 import com.adgvcxz.rulerrecycleriew.RulerSnapHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,9 +14,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RulerRecyclerView recyclerView = (RulerRecyclerView) findViewById(R.id.ac_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ac_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setLineWidthAndSpacing(3, 57);
+        recyclerView.setAdapter(new RulerAdapter.Builder().setWidthAndSpacing(recyclerView, 3, 57).build());
 //        new RulerSnapHelper().attachToRecyclerView(recyclerView);
     }
 }
