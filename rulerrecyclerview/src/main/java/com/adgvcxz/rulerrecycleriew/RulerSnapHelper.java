@@ -3,7 +3,6 @@ package com.adgvcxz.rulerrecycleriew;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -17,11 +16,11 @@ public class RulerSnapHelper extends RecyclerView.OnScrollListener {
     private boolean mScrolled = false;
     private int mScaleWidth;
 
-    public void attachToRecyclerView(@Nullable RecyclerView recyclerView, int scaleWidth) {
+    public void attachToRecyclerView(@Nullable RecyclerView recyclerView, int lineWidth, int lineSpacing) {
         if (recyclerView != null) {
             mRecyclerView = recyclerView;
             recyclerView.addOnScrollListener(this);
-            mScaleWidth = scaleWidth;
+            mScaleWidth = lineWidth + lineSpacing / 2 * 2;
         }
     }
 
@@ -38,12 +37,9 @@ public class RulerSnapHelper extends RecyclerView.OnScrollListener {
                     int offset;
                     int position = layoutManager.getPosition(view);
                     if (position == 0) {
-                        offset = -(view.getLeft() % mScaleWidth);
-                    } else if (position == recyclerView.getAdapter().getItemCount() - 1) {
-                        offset = mScaleWidth - ((view.getRight() - mRecyclerView.getWidth()) % mScaleWidth);
+                        offset = (-view.getLeft() % mScaleWidth);
                     } else {
-//                        int middle = (view.getRight() + view.getLeft()) / 2;
-                        offset = (mRecyclerView.getWidth() / 2 - view.getLeft()) % mScaleWidth;
+                        offset = (mRecyclerView.getWidth() / 2 - mScaleWidth / 2 - view.getLeft()) % mScaleWidth;
                     }
                     if (offset != 0) {
                         if (offset < mScaleWidth / 2) {

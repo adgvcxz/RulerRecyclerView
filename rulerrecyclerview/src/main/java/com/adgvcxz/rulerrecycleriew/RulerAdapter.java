@@ -39,18 +39,20 @@ public class RulerAdapter extends RecyclerView.Adapter {
 
         if (viewType == LINE) {
             RulerItemView view = new RulerItemView(parent.getContext());
-            view.set(mMax, mLeftNumber, parent.getHeight() / 2, mLineWidth, mLineSpacing);
+            view.init(mMax, mLeftNumber, mLineWidth, mLineSpacing);
             return new RecyclerView.ViewHolder(view) {
             };
         } else if (viewType == RIGHT_SPACING) {
             RulerRightView view = new RulerRightView(parent.getContext());
             int remind = (mLineNumber + 1) % mMax + mMax - mRightNumber - 1;
-            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getHeight() / 2, mRightNumber, remind, mLineWidth, mLineSpacing);
+//            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getHeight() / 2, mRightNumber, remind, mLineWidth, mLineSpacing);
+            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), mRightNumber, remind, mLineWidth, mLineSpacing);
             return new RecyclerView.ViewHolder(view) {
             };
         } else {
             RulerLeftView view = new RulerLeftView(parent.getContext());
-            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getHeight() / 2, mLeftNumber, mLineWidth, mLineSpacing);
+//            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getHeight() / 2, mLeftNumber, mLineWidth, mLineSpacing);
+            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), mRightNumber + 1, mLineWidth, mLineSpacing);
             return new RecyclerView.ViewHolder(view) {
             };
         }
@@ -59,6 +61,9 @@ public class RulerAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) == LINE) {
+            ((RulerItemView) holder.itemView).adjustTextView("120.0");
+        }
     }
 
     @Override
@@ -87,7 +92,7 @@ public class RulerAdapter extends RecyclerView.Adapter {
         public Builder setWidthAndSpacing(RecyclerView recyclerView, int line, int spacing) {
             mRulerAdapter.mLineWidth = line;
             mRulerAdapter.mLineSpacing = spacing;
-            new RulerSnapHelper().attachToRecyclerView(recyclerView, line + spacing);
+            new RulerSnapHelper().attachToRecyclerView(recyclerView, line, spacing);
             return this;
         }
 

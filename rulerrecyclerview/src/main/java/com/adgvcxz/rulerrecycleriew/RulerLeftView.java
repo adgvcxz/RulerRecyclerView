@@ -2,7 +2,9 @@ package com.adgvcxz.rulerrecycleriew;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 /**
@@ -10,31 +12,36 @@ import android.widget.LinearLayout;
  * Created by zhaowei on 2016/12/15.
  */
 
-public class RulerLeftView extends LinearLayout {
+public class RulerLeftView extends RulerBaseItemView {
 
 
     public RulerLeftView(Context context) {
         super(context);
     }
 
-    public void init(int width, int height, int number, int lineWidth, int lineSpacing) {
-        Context context = getContext();
-        View leftView = new View(context);
-        addView(leftView, new LayoutParams(width, 1));
-        View view = new View(context);
-        view.setBackgroundColor(Color.RED);
-        addView(view, new LayoutParams(lineWidth, height));
-        View spacing = new View(context);
-        addView(spacing, new LayoutParams(lineSpacing, 1));
-        for (int i = 0; i < number; i++) {
-            view = new View(context);
-            view.setLayoutParams(new LayoutParams(lineWidth, height / 2));
+    public void init(int leftWidth, int number, int lineWidth, int lineSpacing) {
+        int margin = lineSpacing / 2;
+        LinearLayout.LayoutParams lp = (LayoutParams) mScaleLeftLayout.getLayoutParams();
+        lp.width = (leftWidth - lineWidth / 2) - margin;
+        mScaleLeftLayout.setLayoutParams(lp);
+        lp = generateLayoutParams(lineWidth, margin);
+        mMiddleScaleView.setLayoutParams(lp);
+        mMiddleScaleView.setBackgroundColor(Color.RED);
+        for (int i = 0; i < number - 1; i++) {
+            View view = new View(getContext());
+            lp = generateLayoutParams(lineWidth, margin);
+            lp.weight = 0.5f;
+            mScaleRightLayout.addView(view, lp);
             view.setBackgroundColor(Color.BLUE);
-            addView(view);
-            spacing = new View(context);
-            spacing.setLayoutParams(new LayoutParams(lineSpacing, 1));
-            addView(spacing);
         }
-        setBackgroundColor(Color.DKGRAY);
+        adjustLeftTextView(leftWidth, "100");
+    }
+
+    public void adjustLeftTextView(int leftMargin, String str) {
+        float width = mScaleTextPaint.measureText(str);
+        LayoutParams lp = (LayoutParams) mScaleTextView.getLayoutParams();
+        lp.leftMargin = (int) (leftMargin - width / 2);
+        mScaleTextView.setLayoutParams(lp);
+        mScaleTextView.setText(str);
     }
 }
