@@ -2,7 +2,6 @@ package com.adgvcxz.rulerrecycleriew;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 /**
@@ -16,16 +15,14 @@ public class RulerAdapter extends RecyclerView.Adapter {
     private static final int LEFT_SPACING = 5;
     private static final int RIGHT_SPACING = 6;
 
+    private OnRulerScrollListener mOnRulerScrollListener;
+
 
     private int mLineWidth;
     private int mLineSpacing;
 
-    private LayoutInflater mInflater;
-    private float mStartValue = 0;
-    private float mEndValue = 100;
-    private float mPerValue;
     private int mMax = 9;
-    private int mLineNumber = 19;
+    private int mLineNumber = 17;
     private int mLeftNumber;
     private int mRightNumber;
 
@@ -40,35 +37,58 @@ public class RulerAdapter extends RecyclerView.Adapter {
         if (viewType == LINE) {
             RulerItemView view = new RulerItemView(parent.getContext());
             view.init(mMax, mLeftNumber, mLineWidth, mLineSpacing);
+            view.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
             return new RecyclerView.ViewHolder(view) {
             };
         } else if (viewType == RIGHT_SPACING) {
             RulerRightView view = new RulerRightView(parent.getContext());
-            int remind = (mLineNumber + 1) % mMax + mMax - mRightNumber - 1;
-//            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getHeight() / 2, mRightNumber, remind, mLineWidth, mLineSpacing);
-            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), mRightNumber, remind, mLineWidth, mLineSpacing);
+            int remind = (mLineNumber - mRightNumber) % mMax;
+            remind = remind == 0 ? mMax : remind;
+            view.init(parent.getWidth() / 2 - parent.getPaddingRight(), mLeftNumber, remind, mLineWidth, mLineSpacing);
+            if (remind >= mRightNumber && mOnRulerScrollListener != null) {
+                view.adjustRightTextView(mOnRulerScrollListener.getScaleStr((getItemCount() - 1) * mMax));
+            }
+            Log.e("zhaow", remind + "acd" + mRightNumber);
+            view.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
             return new RecyclerView.ViewHolder(view) {
             };
         } else {
             RulerLeftView view = new RulerLeftView(parent.getContext());
-//            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getHeight() / 2, mLeftNumber, mLineWidth, mLineSpacing);
-            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), mRightNumber + 1, mLineWidth, mLineSpacing);
+            view.initWhenEdge(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getWidth() / 2 - parent.getPaddingRight(),
+                    mLeftNumber, mRightNumber, mLineNumber, mLineWidth, mLineSpacing);
+            if (mOnRulerScrollListener != null) {
+                view.adjustLeftTextView(mOnRulerScrollListener.getScaleStr(0));
+            }
+            view.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
             return new RecyclerView.ViewHolder(view) {
             };
         }
-
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (getItemViewType(position) == LINE) {
-            ((RulerItemView) holder.itemView).adjustTextView("120.0");
+        if (mOnRulerScrollListener != null && getItemViewType(position) == LINE) {
+            String str = mOnRulerScrollListener.getScaleStr(position * mMax);
+            ((RulerItemView) holder.itemView).adjustTextView(str);
         }
+        holder.itemView.requestLayout();
     }
 
     @Override
     public int getItemCount() {
-        return (int) Math.ceil((mLineNumber + 1) / (float) mMax);
+        if (mLeftNumber > 0) {
+            if (mRightNumber >= mLineNumber) {
+                return 1;
+            } else {
+                if (mMax + mRightNumber + 1 >= mLineNumber) {
+                    return 2;
+                } else {
+                    int number = mLineNumber - mRightNumber - 1;
+                    return 2 + number / mMax;
+                }
+            }
+        }
+        return 0;
     }
 
     @Override
@@ -99,8 +119,13 @@ public class RulerAdapter extends RecyclerView.Adapter {
         public Builder setNumberAndGroup(int number, int perGroup) {
             mRulerAdapter.mLineNumber = number;
             mRulerAdapter.mMax = perGroup;
-            mRulerAdapter.mLeftNumber = (int) (Math.ceil((float)perGroup - 1) / 2);
-            mRulerAdapter.mRightNumber = (int) (Math.floor((float)perGroup - 1) / 2);
+            mRulerAdapter.mLeftNumber = (int) (Math.ceil((float) (perGroup - 1) / 2));
+            mRulerAdapter.mRightNumber = (int) (Math.floor((float) (perGroup - 1) / 2));
+            return this;
+        }
+
+        public Builder setOnRulerScrollListener(OnRulerScrollListener listener) {
+            mRulerAdapter.mOnRulerScrollListener = listener;
             return this;
         }
 

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.TextPaint;
 import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,7 +15,7 @@ import android.widget.TextView;
 public class RulerBaseItemView extends LinearLayout {
 
     protected LinearLayout mScaleLeftLayout;
-    protected View mMiddleScaleView;
+    protected RulerScaleView mMiddleScaleView;
     protected LinearLayout mScaleRightLayout;
     protected TextView mScaleTextView;
     protected TextPaint mScaleTextPaint;
@@ -44,14 +42,14 @@ public class RulerBaseItemView extends LinearLayout {
         topLinearLayout.addView(mScaleLeftLayout, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 
         //初始化中间长的刻度
-        mMiddleScaleView = new View(context);
+        mMiddleScaleView = new RulerScaleView(context);
         topLinearLayout.addView(mMiddleScaleView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 
         //初始化右边的刻度
         mScaleRightLayout = new LinearLayout(context);
         mScaleRightLayout.setOrientation(HORIZONTAL);
-        topLinearLayout.addView(mScaleRightLayout, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         mScaleRightLayout.setBackgroundColor(Color.DKGRAY);
+        topLinearLayout.addView(mScaleRightLayout, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 
         mScaleTextView = new TextView(context);
         mScaleTextView.setTextSize(24);
@@ -67,5 +65,17 @@ public class RulerBaseItemView extends LinearLayout {
         lp.leftMargin = margin;
         lp.rightMargin = margin;
         return lp;
+    }
+
+    protected int getScaleWidth(int lineWidth, int lineSpacing) {
+        return lineWidth + lineSpacing / 2 * 2;
+    }
+
+    protected RulerScaleView generateNormalView(int lineWidth, int lineSpacing) {
+        RulerScaleView view = new RulerScaleView(getContext());
+        view.setProportion(0.5f);
+        view.setBackgroundColor(Color.BLUE);
+        view.setLayoutParams(generateLayoutParams(lineWidth, lineSpacing / 2));
+        return view;
     }
 }

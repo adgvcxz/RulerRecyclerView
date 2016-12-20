@@ -2,7 +2,7 @@ package com.adgvcxz.rulerrecycleriew;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.View;
+import android.util.Log;
 
 /**
  * zhaowei
@@ -26,21 +26,13 @@ public class RulerItemView extends RulerBaseItemView {
         int margin = lineSpacing / 2;
         LayoutParams lp;
         for (int i = 0; i < offset; i++) {
-            View view = new View(getContext());
-            lp = generateLayoutParams(lineWidth, margin);
-            lp.weight = 0.5f;
-            mScaleLeftLayout.addView(view, lp);
-            view.setBackgroundColor(Color.BLUE);
+            mScaleLeftLayout.addView(generateNormalView(lineWidth, lineSpacing));
         }
         lp = generateLayoutParams(lineWidth, margin);
         mMiddleScaleView.setLayoutParams(lp);
         mMiddleScaleView.setBackgroundColor(Color.RED);
         for (int i = offset + 1; i < number; i++) {
-            View view = new View(getContext());
-            lp = generateLayoutParams(lineWidth, margin);
-            lp.weight = 0.5f;
-            mScaleRightLayout.addView(view, lp);
-            view.setBackgroundColor(Color.BLUE);
+            mScaleRightLayout.addView(generateNormalView(lineWidth, lineSpacing));
         }
     }
 
@@ -52,4 +44,6 @@ public class RulerItemView extends RulerBaseItemView {
         mScaleTextView.setLayoutParams(lp);
         mScaleTextView.setText(str);
     }
+
+
 }
