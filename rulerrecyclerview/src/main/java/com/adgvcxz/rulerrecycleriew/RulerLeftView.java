@@ -3,7 +3,6 @@ package com.adgvcxz.rulerrecycleriew;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -24,8 +23,11 @@ public class RulerLeftView extends RulerBaseItemView {
         mLeftMargin = leftWidth;
         int margin = lineSpacing / 2;
         LinearLayout.LayoutParams lp = (LayoutParams) mScaleLeftLayout.getLayoutParams();
+        Log.e("zhaow", leftWidth + "   " + lineWidth + "   " + margin);
         lp.width = (leftWidth - lineWidth / 2) - margin;
         mScaleLeftLayout.setLayoutParams(lp);
+        Log.e("zhaow", lp.width + "   1");
+        mScaleLeftLayout.setBackgroundColor(Color.GRAY);
         lp = generateLayoutParams(lineWidth, margin);
         mMiddleScaleView.setLayoutParams(lp);
         mMiddleScaleView.setBackgroundColor(Color.RED);
@@ -43,45 +45,51 @@ public class RulerLeftView extends RulerBaseItemView {
         init(leftWidth, rightWidth, rightNumber, count, lineWidth, lineSpacing);
         LinearLayout.LayoutParams lp = (LayoutParams) mScaleLeftLayout.getLayoutParams();
         int leftMargin = lp.width;
-        int number = leftMargin / getScaleWidth(lineWidth, lineSpacing);
+        int number = (int) Math.ceil((float) leftMargin / getScaleWidth(lineWidth, lineSpacing));
         int group = leftNumber + rightNumber + 1;
         int offset = number % group;
         for (int i = 0; i < number; i++) {
             RulerScaleView view;
             if (i == 0) {
                 view = new RulerScaleView(getContext());
-                lp = generateLayoutParams(lineWidth, lineSpacing / 2);
-                lp.leftMargin = leftMargin - number * getScaleWidth(lineWidth, lineSpacing) + lp.leftMargin;
+                lp = new LayoutParams(lineWidth, LayoutParams.WRAP_CONTENT);
+                lp.leftMargin = leftMargin - number * getScaleWidth(lineWidth, lineSpacing);
+                lp.width = lineWidth;
+                lp.rightMargin = lineSpacing / 2;
                 view.setLayoutParams(lp);
-                view.setBackgroundColor(Color.BLUE);
             } else {
                 view = generateNormalView(lineWidth, lineSpacing);
             }
             if (i % group == offset) {
                 view.setProportion(1);
                 view.setBackgroundColor(Color.RED);
+            } else {
+                view.setProportion(0.5f);
+                view.setBackgroundColor(Color.BLUE);
             }
             mScaleLeftLayout.addView(view);
         }
         if (rightNumber >= count) {
             LinearLayout linearLayout = (LinearLayout) mScaleRightLayout.getChildAt(mScaleRightLayout.getChildCount() - 1);
             int rightMargin = linearLayout.getLayoutParams().width;
-            number = rightMargin / getScaleWidth(lineWidth, lineSpacing);
+            number = (int) Math.ceil((float) rightMargin / getScaleWidth(lineWidth, lineSpacing));
             group = leftNumber + rightNumber + 1;
             for (int i = 0; i < number; i++) {
                 RulerScaleView view;
                 if (i == number - 1) {
                     view = new RulerScaleView(getContext());
-                    lp = generateLayoutParams(lineWidth, lineSpacing / 2);
-                    lp.rightMargin = rightMargin - number * getScaleWidth(lineWidth, lineSpacing) + lp.rightMargin;
+                    lp = new LayoutParams(lineWidth, LayoutParams.WRAP_CONTENT);
+                    lp.rightMargin = rightMargin - number * getScaleWidth(lineWidth, lineSpacing);
                     view.setLayoutParams(lp);
-                    view.setBackgroundColor(Color.BLUE);
                 } else {
                     view = generateNormalView(lineWidth, lineSpacing);
                 }
                 if ((i + count + 1) % group == 0) {
                     view.setProportion(1);
                     view.setBackgroundColor(Color.RED);
+                } else {
+                    view.setProportion(0.5f);
+                    view.setBackgroundColor(Color.BLUE);
                 }
                 linearLayout.addView(view);
             }

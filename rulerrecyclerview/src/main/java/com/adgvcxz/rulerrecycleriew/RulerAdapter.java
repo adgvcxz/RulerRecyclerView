@@ -44,11 +44,10 @@ public class RulerAdapter extends RecyclerView.Adapter {
             RulerRightView view = new RulerRightView(parent.getContext());
             int remind = (mLineNumber - mRightNumber) % mMax;
             remind = remind == 0 ? mMax : remind;
-            view.init(parent.getWidth() / 2 - parent.getPaddingRight(), mLeftNumber, remind, mLineWidth, mLineSpacing);
+            view.initWhenEdge(parent.getWidth() / 2 - parent.getPaddingRight(), mLeftNumber, mRightNumber, mLineNumber, remind, mLineWidth, mLineSpacing);
             if (remind >= mRightNumber && mOnRulerScrollListener != null) {
                 view.adjustRightTextView(mOnRulerScrollListener.getScaleStr((getItemCount() - 1) * mMax));
             }
-            Log.e("zhaow", remind + "acd" + mRightNumber);
             view.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
             return new RecyclerView.ViewHolder(view) {
             };
