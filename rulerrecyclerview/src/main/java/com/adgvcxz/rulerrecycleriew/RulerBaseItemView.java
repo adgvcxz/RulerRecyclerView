@@ -1,9 +1,12 @@
 package com.adgvcxz.rulerrecycleriew;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,17 +15,41 @@ import android.widget.TextView;
  * Created by zhaowei on 2016/12/17.
  */
 
-public class RulerBaseItemView extends LinearLayout {
+@SuppressLint("ViewConstructor")
+class RulerBaseItemView extends LinearLayout {
 
     protected LinearLayout mScaleLeftLayout;
     protected RulerScaleView mMiddleScaleView;
     protected LinearLayout mScaleRightLayout;
     protected TextView mScaleTextView;
     protected TextPaint mScaleTextPaint;
+    protected int mColor;
+    protected int mLineWidth;
+    protected int mScaleWidth;
+    protected float mMiddleLength;
+    protected float mNormalLength;
+    protected float mTextSize;
+    protected int mTextColor;
 
-    public RulerBaseItemView(Context context) {
+    public RulerBaseItemView(Context context, int color, int lineWidth, int scaleWidth, float middle, float normal) {
         super(context);
+        mColor = color;
+        mLineWidth = lineWidth;
+        mScaleWidth = scaleWidth;
+        mMiddleLength = middle;
+        mNormalLength = normal;
         init(context);
+        setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    }
+
+    public void setTextSizeAndColor(float textSize, int textColor) {
+        mTextSize = textSize;
+        mTextColor = textColor;
+        if (mScaleTextView != null) {
+            mScaleTextView.setTextSize(mTextSize);
+            mScaleTextView.setTextColor(mTextColor);
+            mScaleTextPaint = mScaleTextView.getPaint();
+        }
     }
 
     private void init(Context context) {
@@ -42,40 +69,51 @@ public class RulerBaseItemView extends LinearLayout {
         topLinearLayout.addView(mScaleLeftLayout, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 
         //初始化中间长的刻度
-        mMiddleScaleView = new RulerScaleView(context);
+        mMiddleScaleView = generateMiddleView();
         topLinearLayout.addView(mMiddleScaleView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 
         //初始化右边的刻度
         mScaleRightLayout = new LinearLayout(context);
         mScaleRightLayout.setOrientation(HORIZONTAL);
-        mScaleRightLayout.setBackgroundColor(Color.DKGRAY);
         topLinearLayout.addView(mScaleRightLayout, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 
         mScaleTextView = new TextView(context);
-        mScaleTextView.setTextSize(24);
+        mScaleTextView.setTextSize(mTextSize);
         mScaleTextView.setGravity(Gravity.CENTER);
-        mScaleTextView.setText("60.0");
+        mScaleTextView.setTextColor(mTextColor);
         LayoutParams textLp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         addView(mScaleTextView, textLp);
         mScaleTextPaint = mScaleTextView.getPaint();
     }
 
     protected LinearLayout.LayoutParams generateLayoutParams(int width, int margin) {
-        LayoutParams lp = new LayoutParams(width, LayoutParams.WRAP_CONTENT);
+        LayoutParams lp = new LayoutParams(width, LayoutParams.MATCH_PARENT);
         lp.leftMargin = margin;
         lp.rightMargin = margin;
         return lp;
     }
 
-    protected int getScaleWidth(int lineWidth, int lineSpacing) {
-        return lineWidth + lineSpacing / 2 * 2;
+    protected int getScaleWidth() {
+        return mLineWidth + mScaleWidth / 2 * 2;
     }
 
-    protected RulerScaleView generateNormalView(int lineWidth, int lineSpacing) {
+    protected RulerScaleView generateNormalView() {
         RulerScaleView view = new RulerScaleView(getContext());
-        view.setProportion(0.5f);
-        view.setBackgroundColor(Color.BLUE);
-        view.setLayoutParams(generateLayoutParams(lineWidth, lineSpacing / 2));
+        view.setProportion(mNormalLength);
+        view.setBackgroundColor(mColor);
+        view.setLayoutParams(generateLayoutParams(mLineWidth, mScaleWidth / 2));
         return view;
+    }
+
+    protected RulerScaleView generateMiddleView() {
+        RulerScaleView view = new RulerScaleView(getContext());
+        view.setBackgroundColor(mColor);
+        view.setProportion(mMiddleLength);
+        view.setLayoutParams(generateLayoutParams(mLineWidth, mScaleWidth / 2));
+        return view;
+    }
+
+    public void adjustTextView(String str) {
+
     }
 }

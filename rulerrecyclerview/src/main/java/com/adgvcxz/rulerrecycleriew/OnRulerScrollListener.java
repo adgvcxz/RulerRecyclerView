@@ -7,6 +7,8 @@ package com.adgvcxz.rulerrecycleriew;
 
 public interface OnRulerScrollListener {
 
-    String getScaleStr(int scale);
+    String getScaleValue(int scale);
+
+    void onScaleChange(int scale);
 
 }

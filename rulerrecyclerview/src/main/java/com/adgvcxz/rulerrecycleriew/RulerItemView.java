@@ -1,49 +1,41 @@
 package com.adgvcxz.rulerrecycleriew;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 
 /**
  * zhaowei
  * Created by zhaowei on 2016/12/15.
  */
 
-public class RulerItemView extends RulerBaseItemView {
-
-    private int mLineWidth;
-    private int mLineSpacing;
+@SuppressLint("ViewConstructor")
+class RulerItemView extends RulerBaseItemView {
 
 
-    public RulerItemView(Context context) {
-        super(context);
+    public RulerItemView(Context context, int color, int lineWidth, int scaleWidth, float middle, float normal) {
+        super(context, color, lineWidth, scaleWidth, middle, normal);
     }
 
-
-    public void init(int number, int offset, int lineWidth, int lineSpacing) {
-        mLineWidth = lineWidth;
-        mLineSpacing = lineSpacing;
-        int margin = lineSpacing / 2;
+    public void init(int number, int leftNumber) {
+        int margin = mScaleWidth / 2;
         LayoutParams lp;
-        for (int i = 0; i < offset; i++) {
-            mScaleLeftLayout.addView(generateNormalView(lineWidth, lineSpacing));
+        for (int i = 0; i < leftNumber; i++) {
+            mScaleLeftLayout.addView(generateNormalView());
         }
-        lp = generateLayoutParams(lineWidth, margin);
+        lp = generateLayoutParams(mLineWidth, margin);
         mMiddleScaleView.setLayoutParams(lp);
-        mMiddleScaleView.setBackgroundColor(Color.RED);
-        for (int i = offset + 1; i < number; i++) {
-            mScaleRightLayout.addView(generateNormalView(lineWidth, lineSpacing));
+        mMiddleScaleView.setBackgroundColor(mColor);
+        for (int i = leftNumber + 1; i < number; i++) {
+            mScaleRightLayout.addView(generateNormalView());
         }
     }
 
     public void adjustTextView(String str) {
-        int leftWidth = ((mLineSpacing / 2) * 2 + mLineWidth) * mScaleLeftLayout.getChildCount() + mLineWidth / 2 + mLineSpacing / 2;
+        int leftWidth = ((mScaleWidth / 2) * 2 + mLineWidth) * mScaleLeftLayout.getChildCount() + mLineWidth / 2 + mScaleWidth / 2;
         float width = mScaleTextPaint.measureText(str);
         LayoutParams lp = (LayoutParams) mScaleTextView.getLayoutParams();
         lp.leftMargin = (int) (leftWidth - width / 2);
         mScaleTextView.setLayoutParams(lp);
         mScaleTextView.setText(str);
     }
-
-
 }
