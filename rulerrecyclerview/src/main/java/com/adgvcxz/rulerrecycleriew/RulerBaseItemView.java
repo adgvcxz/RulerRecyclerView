@@ -15,7 +15,6 @@ import android.widget.TextView;
  * Created by zhaowei on 2016/12/17.
  */
 
-@SuppressLint("ViewConstructor")
 class RulerBaseItemView extends LinearLayout {
 
     protected LinearLayout mScaleLeftLayout;
@@ -30,6 +29,10 @@ class RulerBaseItemView extends LinearLayout {
     protected float mNormalLength;
     protected float mTextSize;
     protected int mTextColor;
+
+    public RulerBaseItemView(Context context) {
+        super(context);
+    }
 
     public RulerBaseItemView(Context context, int color, int lineWidth, int scaleWidth, float middle, float normal) {
         super(context);

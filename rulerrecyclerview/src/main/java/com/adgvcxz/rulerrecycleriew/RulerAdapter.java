@@ -1,7 +1,6 @@
 package com.adgvcxz.rulerrecycleriew;
 
 import android.graphics.Color;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -92,52 +91,84 @@ public class RulerAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-
-        RulerBaseItemView view;
-
+        Log.e("zhaow", "onCreateViewHolder" + viewType + "   " + parent.getWidth());
         if (viewType == LINE) {
-            view = new RulerItemView(parent.getContext(), mScaleLineColor, mLineWidth, mScaleWidth, mMiddleLine, mNormalLine);
+            final RulerItemView view = new RulerItemView(parent.getContext(), mScaleLineColor, mLineWidth, mScaleWidth, mMiddleLine, mNormalLine);
             view.setTextSizeAndColor(mTextSize, mTextColor);
-            ((RulerItemView) view).init(mGroupNumber, mLeftNumber);
+            view.init(mGroupNumber, mLeftNumber);
+            return new RecyclerView.ViewHolder(view) {
+            };
         } else if (viewType == RIGHT_SPACING) {
-            view = new RulerRightView(parent.getContext(), mScaleLineColor, mLineWidth, mScaleWidth, mMiddleLine, mNormalLine);
-            view.setTextSizeAndColor(mTextSize, mTextColor);
-            int remind = (mScaleNumber - mRightNumber) % mGroupNumber;
-            remind = remind == 0 ? mGroupNumber : remind;
-            if (mShowEdge) {
-                ((RulerRightView) view).initWhenEdge(parent.getWidth() / 2 - parent.getPaddingRight(), mLeftNumber, mRightNumber, mScaleNumber, remind);
-            } else {
-                ((RulerRightView) view).init(parent.getWidth() / 2 - parent.getPaddingRight(), mLeftNumber, remind);
-            }
-            if (remind >= mRightNumber && mOnRulerScrollListener != null) {
-                view.adjustTextView(mOnRulerScrollListener.getScaleValue((getItemCount() - 1) * mGroupNumber));
-            }
-        } else {
-            view = new RulerLeftView(parent.getContext(), mScaleLineColor, mLineWidth, mScaleWidth, mMiddleLine, mNormalLine);
-            view.setTextSizeAndColor(mTextSize, mTextColor);
-            if (mShowEdge) {
+                final RulerRightView view = new RulerRightView(parent.getContext(), mScaleLineColor, mLineWidth, mScaleWidth, mMiddleLine, mNormalLine);
+                view.setTextSizeAndColor(mTextSize, mTextColor);
+                int number = (mScaleNumber - mRightNumber) % mGroupNumber;
+                final int remind = number == 0 ? mGroupNumber : number;
+                if (mShowEdge) {
                 parent.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("zhaow", parent.getWidth() + "   " + parent.getPaddingLeft());
+                    if (parent.getWidth() != 0) {
+                        view.initWhenEdge(parent.getWidth() / 2 - parent.getPaddingRight(), mLeftNumber, mRightNumber, mScaleNumber, remind);
+                        if (remind >= mRightNumber && mOnRulerScrollListener != null) {
+                            view.adjustTextView(mOnRulerScrollListener.getScaleValue((getItemCount() - 1) * mGroupNumber));
+                        }
+                    }
                     }
                 });
-                ((RulerLeftView) view).initWhenEdge(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getWidth() / 2 - parent.getPaddingRight(),
-                        mLeftNumber, mRightNumber, mScaleNumber);
-            } else {
-                ((RulerLeftView) view).init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getWidth() / 2 - parent.getPaddingRight(), mRightNumber, mScaleNumber);
-            }
-            if (mOnRulerScrollListener != null) {
-                view.adjustTextView(mOnRulerScrollListener.getScaleValue(0));
-            }
+
+                } else {
+                parent.post(new Runnable() {
+                    @Override
+                    public void run() {
+                    if (parent.getWidth() != 0) {
+                        view.init(parent.getWidth() / 2 - parent.getPaddingRight(), mLeftNumber, remind);
+                        if (remind >= mRightNumber && mOnRulerScrollListener != null) {
+                            view.adjustTextView(mOnRulerScrollListener.getScaleValue((getItemCount() - 1) * mGroupNumber));
+                        }
+                    }
+                    }
+                });
+                }
+                return new RecyclerView.ViewHolder(view) {
+                };
+
+        } else {
+                final RulerLeftView view = new RulerLeftView(parent.getContext(), mScaleLineColor, mLineWidth, mScaleWidth, mMiddleLine, mNormalLine);
+                view.setTextSizeAndColor(mTextSize, mTextColor);
+                if (mShowEdge) {
+                parent.post(new Runnable() {
+                    @Override
+                    public void run() {
+                    if (parent.getWidth() != 0) {
+                        view.initWhenEdge(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getWidth() / 2 - parent.getPaddingRight(),
+                                mLeftNumber, mRightNumber, mScaleNumber);
+                        if (mOnRulerScrollListener != null) {
+                            view.adjustTextView(mOnRulerScrollListener.getScaleValue(0));
+                        }
+                    }
+                    }
+                });
+                } else {
+                parent.post(new Runnable() {
+                    @Override
+                    public void run() {
+                    if (parent.getWidth() != 0) {
+                        view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getWidth() / 2 - parent.getPaddingRight(), mRightNumber, mScaleNumber);
+                        if (mOnRulerScrollListener != null) {
+                            view.adjustTextView(mOnRulerScrollListener.getScaleValue(0));
+                        }
+                    }
+                    }
+                });
+                }
+                return new RecyclerView.ViewHolder(view) {
+                };
         }
-        return new RecyclerView.ViewHolder(view) {
-        };
+
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Log.e("zhaow", (holder.itemView).getWidth() + "abcd");
         if (mOnRulerScrollListener != null && getItemViewType(position) == LINE) {
             String str = mOnRulerScrollListener.getScaleValue(position * mGroupNumber);
             ((RulerItemView) holder.itemView).adjustTextView(str);
@@ -179,8 +210,14 @@ public class RulerAdapter extends RecyclerView.Adapter {
         private RulerSnapHelper mRulerSnapHelper;
         private RecyclerView mRecyclerView;
 
-        public Builder(RecyclerView recyclerView) {
+        public Builder(final RecyclerView recyclerView) {
             mRecyclerView = recyclerView;
+//            recyclerView.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mRulerAdapter.notifyDataSetChanged();
+//                }
+//            });
             mRulerAdapter = new RulerAdapter();
             mRulerSnapHelper = new RulerSnapHelper();
             mRulerSnapHelper.attachToRecyclerView(recyclerView, mRulerAdapter.mLineWidth
@@ -237,16 +274,23 @@ public class RulerAdapter extends RecyclerView.Adapter {
         }
 
         public RulerAdapter build() {
-            if (mRulerAdapter.mStartScaleLine > 0) {
-                mRecyclerView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        int startScaleLine = mRulerAdapter.mStartScaleLine;
-                        int scaleWidth = mRulerAdapter.mScaleWidth / 2 * 2 + mRulerAdapter.mLineWidth;
-                        mRecyclerView.scrollBy(startScaleLine * scaleWidth, 0);
-                    }
-                });
-            }
+//            if (mRulerAdapter.mStartScaleLine > 0) {
+//                mRecyclerView.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mRecyclerView.setAdapter(mRulerAdapter);
+//                        int startScaleLine = mRulerAdapter.mStartScaleLine;
+//                        int scaleWidth = mRulerAdapter.mScaleWidth / 2 * 2 + mRulerAdapter.mLineWidth;
+//                        mRecyclerView.scrollBy(startScaleLine * scaleWidth, 0);
+//                    }
+//                });
+//            }
+//            new Handler().post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mRecyclerView.setAdapter(mRulerAdapter);
+//                }
+//            });
             return mRulerAdapter;
         }
     }

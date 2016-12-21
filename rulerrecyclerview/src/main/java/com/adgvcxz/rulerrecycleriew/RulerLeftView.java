@@ -1,8 +1,6 @@
 package com.adgvcxz.rulerrecycleriew;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -10,10 +8,13 @@ import android.widget.LinearLayout;
  * zhaowei
  * Created by zhaowei on 2016/12/15.
  */
-@SuppressLint("ViewConstructor")
 class RulerLeftView extends RulerBaseItemView {
 
     private int mLeftMargin;
+
+    public RulerLeftView(Context context) {
+        super(context);
+    }
 
     public RulerLeftView(Context context, int color, int lineWidth, int scaleWidth, float middle, float normal) {
         super(context, color, lineWidth, scaleWidth, middle, normal);
@@ -25,7 +26,6 @@ class RulerLeftView extends RulerBaseItemView {
         int margin = mScaleWidth / 2;
         LinearLayout.LayoutParams lp = (LayoutParams) mScaleLeftLayout.getLayoutParams();
         lp.width = (leftWidth - mLineWidth / 2) - margin;
-        Log.e("zhaow", "abcd" + lp.width + "    " + leftWidth + "    " +mLineWidth + "   " + margin);
         mScaleLeftLayout.setLayoutParams(lp);
         lp = generateLayoutParams(mLineWidth, margin);
         mMiddleScaleView.setLayoutParams(lp);
@@ -44,7 +44,6 @@ class RulerLeftView extends RulerBaseItemView {
         LinearLayout.LayoutParams lp = (LayoutParams) mScaleLeftLayout.getLayoutParams();
         int leftMargin = lp.width;
         int number = (int) Math.ceil((float) leftMargin / getScaleWidth());
-        Log.e("zhaow", "number" + number);
         int group = leftNumber + rightNumber + 1;
         int offset = number % group;
         for (int i = 0; i < number; i++) {
@@ -56,7 +55,6 @@ class RulerLeftView extends RulerBaseItemView {
                 lp.width = mLineWidth;
                 lp.rightMargin = mScaleWidth / 2;
                 view.setLayoutParams(lp);
-                Log.e("zhaow", "left" + lp.leftMargin);
             } else {
                 view = generateNormalView();
             }

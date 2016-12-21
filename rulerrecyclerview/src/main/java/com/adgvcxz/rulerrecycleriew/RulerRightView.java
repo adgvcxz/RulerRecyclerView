@@ -10,10 +10,13 @@ import android.widget.LinearLayout;
  * Created by zhaowei on 2016/12/15.
  */
 
-@SuppressLint("ViewConstructor")
 class RulerRightView extends RulerBaseItemView {
 
     private int mRightWidth;
+
+    public RulerRightView(Context context) {
+        super(context);
+    }
 
     public RulerRightView(Context context, int color, int lineWidth, int scaleWidth, float middle, float normal) {
         super(context, color, lineWidth, scaleWidth, middle, normal);

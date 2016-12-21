@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements OnRulerScrollList
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         int lineWidth = getResources().getDimensionPixelSize(R.dimen.line_width);
         int scaleWidth = getResources().getDimensionPixelSize(R.dimen.scale_width);
-        recyclerView.setAdapter(new RulerAdapter.Builder(recyclerView).setLineAndScale(120, 12)
+        recyclerView.setAdapter(new RulerAdapter.Builder(recyclerView).setLineAndScale(lineWidth, scaleWidth)
                 .setNumberAndGroup(100, 10)
                 .setOnRulerScrollListener(this)
                 .setLineLength(1.0f, 0.5f)
