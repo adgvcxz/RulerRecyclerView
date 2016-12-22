@@ -1,9 +1,10 @@
 package com.adgvcxz.rulerrecycleriew;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 /**
  * zhaowei
@@ -83,6 +84,11 @@ public class RulerAdapter extends RecyclerView.Adapter {
      */
     private int mTextColor = Color.GRAY;
 
+    /**
+     * 最初需要移动的距离
+     */
+    private int mOriginDistance;
+
     private RulerAdapter() {
         mLeftNumber = (int) (Math.ceil((float) (mGroupNumber - 1) / 2));
         mRightNumber = (int) (Math.floor((float) (mGroupNumber - 1) / 2));
@@ -91,7 +97,6 @@ public class RulerAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        Log.e("zhaow", "onCreateViewHolder" + viewType + "   " + parent.getWidth());
         if (viewType == LINE) {
             final RulerItemView view = new RulerItemView(parent.getContext(), mScaleLineColor, mLineWidth, mScaleWidth, mMiddleLine, mNormalLine);
             view.setTextSizeAndColor(mTextSize, mTextColor);
@@ -99,70 +104,70 @@ public class RulerAdapter extends RecyclerView.Adapter {
             return new RecyclerView.ViewHolder(view) {
             };
         } else if (viewType == RIGHT_SPACING) {
-                final RulerRightView view = new RulerRightView(parent.getContext(), mScaleLineColor, mLineWidth, mScaleWidth, mMiddleLine, mNormalLine);
-                view.setTextSizeAndColor(mTextSize, mTextColor);
-                int number = (mScaleNumber - mRightNumber) % mGroupNumber;
-                final int remind = number == 0 ? mGroupNumber : number;
-                if (mShowEdge) {
+            final RulerRightView view = new RulerRightView(parent.getContext(), mScaleLineColor, mLineWidth, mScaleWidth, mMiddleLine, mNormalLine);
+            view.setTextSizeAndColor(mTextSize, mTextColor);
+            int number = (mScaleNumber - mRightNumber) % mGroupNumber;
+            final int remind = number == 0 ? mGroupNumber : number;
+            if (mShowEdge) {
                 parent.post(new Runnable() {
                     @Override
                     public void run() {
-                    if (parent.getWidth() != 0) {
-                        view.initWhenEdge(parent.getWidth() / 2 - parent.getPaddingRight(), mLeftNumber, mRightNumber, mScaleNumber, remind);
-                        if (remind >= mRightNumber && mOnRulerScrollListener != null) {
-                            view.adjustTextView(mOnRulerScrollListener.getScaleValue((getItemCount() - 1) * mGroupNumber));
+                        if (parent.getWidth() != 0) {
+                            view.initWhenEdge(parent.getWidth() / 2 - parent.getPaddingRight(), mLeftNumber, mRightNumber, mScaleNumber, remind);
+                            if (remind >= mRightNumber && mOnRulerScrollListener != null) {
+                                view.adjustTextView(mOnRulerScrollListener.getScaleValue((getItemCount() - 1) * mGroupNumber));
+                            }
                         }
-                    }
                     }
                 });
 
-                } else {
+            } else {
                 parent.post(new Runnable() {
                     @Override
                     public void run() {
-                    if (parent.getWidth() != 0) {
-                        view.init(parent.getWidth() / 2 - parent.getPaddingRight(), mLeftNumber, remind);
-                        if (remind >= mRightNumber && mOnRulerScrollListener != null) {
-                            view.adjustTextView(mOnRulerScrollListener.getScaleValue((getItemCount() - 1) * mGroupNumber));
+                        if (parent.getWidth() != 0) {
+                            view.init(parent.getWidth() / 2 - parent.getPaddingRight(), mLeftNumber, remind);
+                            if (remind >= mRightNumber && mOnRulerScrollListener != null) {
+                                view.adjustTextView(mOnRulerScrollListener.getScaleValue((getItemCount() - 1) * mGroupNumber));
+                            }
                         }
                     }
-                    }
                 });
-                }
-                return new RecyclerView.ViewHolder(view) {
-                };
+            }
+            return new RecyclerView.ViewHolder(view) {
+            };
 
         } else {
-                final RulerLeftView view = new RulerLeftView(parent.getContext(), mScaleLineColor, mLineWidth, mScaleWidth, mMiddleLine, mNormalLine);
-                view.setTextSizeAndColor(mTextSize, mTextColor);
-                if (mShowEdge) {
+            final RulerLeftView view = new RulerLeftView(parent.getContext(), mScaleLineColor, mLineWidth, mScaleWidth, mMiddleLine, mNormalLine);
+            view.setTextSizeAndColor(mTextSize, mTextColor);
+            if (mShowEdge) {
                 parent.post(new Runnable() {
                     @Override
                     public void run() {
-                    if (parent.getWidth() != 0) {
-                        view.initWhenEdge(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getWidth() / 2 - parent.getPaddingRight(),
-                                mLeftNumber, mRightNumber, mScaleNumber);
-                        if (mOnRulerScrollListener != null) {
-                            view.adjustTextView(mOnRulerScrollListener.getScaleValue(0));
+                        if (parent.getWidth() != 0) {
+                            view.initWhenEdge(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getWidth() / 2 - parent.getPaddingRight(),
+                                    mLeftNumber, mRightNumber, mScaleNumber);
+                            if (mOnRulerScrollListener != null) {
+                                view.adjustTextView(mOnRulerScrollListener.getScaleValue(0));
+                            }
                         }
                     }
-                    }
                 });
-                } else {
+            } else {
                 parent.post(new Runnable() {
                     @Override
                     public void run() {
-                    if (parent.getWidth() != 0) {
-                        view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getWidth() / 2 - parent.getPaddingRight(), mRightNumber, mScaleNumber);
-                        if (mOnRulerScrollListener != null) {
-                            view.adjustTextView(mOnRulerScrollListener.getScaleValue(0));
+                        if (parent.getWidth() != 0) {
+                            view.init(parent.getWidth() / 2 - parent.getPaddingLeft(), parent.getWidth() / 2 - parent.getPaddingRight(), mRightNumber, mScaleNumber);
+                            if (mOnRulerScrollListener != null) {
+                                view.adjustTextView(mOnRulerScrollListener.getScaleValue(0));
+                            }
                         }
                     }
-                    }
                 });
-                }
-                return new RecyclerView.ViewHolder(view) {
-                };
+            }
+            return new RecyclerView.ViewHolder(view) {
+            };
         }
 
     }
@@ -173,7 +178,6 @@ public class RulerAdapter extends RecyclerView.Adapter {
             String str = mOnRulerScrollListener.getScaleValue(position * mGroupNumber);
             ((RulerItemView) holder.itemView).adjustTextView(str);
         }
-        holder.itemView.requestLayout();
     }
 
     @Override
@@ -212,12 +216,6 @@ public class RulerAdapter extends RecyclerView.Adapter {
 
         public Builder(final RecyclerView recyclerView) {
             mRecyclerView = recyclerView;
-//            recyclerView.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mRulerAdapter.notifyDataSetChanged();
-//                }
-//            });
             mRulerAdapter = new RulerAdapter();
             mRulerSnapHelper = new RulerSnapHelper();
             mRulerSnapHelper.attachToRecyclerView(recyclerView, mRulerAdapter.mLineWidth
@@ -274,23 +272,29 @@ public class RulerAdapter extends RecyclerView.Adapter {
         }
 
         public RulerAdapter build() {
-//            if (mRulerAdapter.mStartScaleLine > 0) {
-//                mRecyclerView.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mRecyclerView.setAdapter(mRulerAdapter);
-//                        int startScaleLine = mRulerAdapter.mStartScaleLine;
-//                        int scaleWidth = mRulerAdapter.mScaleWidth / 2 * 2 + mRulerAdapter.mLineWidth;
-//                        mRecyclerView.scrollBy(startScaleLine * scaleWidth, 0);
-//                    }
-//                });
-//            }
-//            new Handler().post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mRecyclerView.setAdapter(mRulerAdapter);
-//                }
-//            });
+            if (mRulerAdapter.mStartScaleLine > 0) {
+                mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (mRecyclerView.getWidth() > 0) {
+                            mRecyclerView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int startScaleLine = mRulerAdapter.mStartScaleLine;
+                                    int scaleWidth = mRulerAdapter.mScaleWidth / 2 * 2 + mRulerAdapter.mLineWidth;
+                                    int distance = startScaleLine * scaleWidth;
+                                    mRecyclerView.smoothScrollBy(distance, 0);
+                                }
+                            });
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        } else {
+                            mRecyclerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        }
+                    }
+                });
+            }
             return mRulerAdapter;
         }
     }

@@ -1,6 +1,7 @@
 package com.adgvcxz.rulerrecycleriew;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -27,6 +28,7 @@ class RulerLeftView extends RulerBaseItemView {
         LinearLayout.LayoutParams lp = (LayoutParams) mScaleLeftLayout.getLayoutParams();
         lp.width = (leftWidth - mLineWidth / 2) - margin;
         mScaleLeftLayout.setLayoutParams(lp);
+        mScaleLeftLayout.setGravity(Gravity.RIGHT);
         lp = generateLayoutParams(mLineWidth, margin);
         mMiddleScaleView.setLayoutParams(lp);
         for (int i = 0; i < rightNumber && i < count; i++) {
@@ -48,16 +50,7 @@ class RulerLeftView extends RulerBaseItemView {
         int offset = number % group;
         for (int i = 0; i < number; i++) {
             RulerScaleView view;
-            if (i == 0) {
-                view = new RulerScaleView(getContext());
-                lp = new LayoutParams(mLineWidth, LayoutParams.WRAP_CONTENT);
-                lp.leftMargin = leftMargin - number * getScaleWidth();
-                lp.width = mLineWidth;
-                lp.rightMargin = mScaleWidth / 2;
-                view.setLayoutParams(lp);
-            } else {
-                view = generateNormalView();
-            }
+            view = generateNormalView();
             if (i % group == offset) {
                 view.setProportion(1);
             } else {
@@ -72,14 +65,14 @@ class RulerLeftView extends RulerBaseItemView {
             group = leftNumber + rightNumber + 1;
             for (int i = 0; i < number; i++) {
                 RulerScaleView view;
-                if (i == number - 1) {
-                    view = new RulerScaleView(getContext());
-                    lp = new LayoutParams(mLineWidth, LayoutParams.WRAP_CONTENT);
-                    lp.rightMargin = rightMargin - number * getScaleWidth();
-                    view.setLayoutParams(lp);
-                } else {
+//                if (i == number - 1) {
+//                    view = new RulerScaleView(getContext());
+//                    lp = new LayoutParams(mLineWidth, LayoutParams.WRAP_CONTENT);
+//                    lp.rightMargin = rightMargin - number * getScaleWidth();
+//                    view.setLayoutParams(lp);
+//                } else {
                     view = generateNormalView();
-                }
+//                }
                 if ((i + count + 1) % group == 0) {
                     view.setProportion(1);
                 } else {
