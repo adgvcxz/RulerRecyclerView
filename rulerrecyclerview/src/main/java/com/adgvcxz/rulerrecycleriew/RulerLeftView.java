@@ -64,15 +64,7 @@ class RulerLeftView extends RulerBaseItemView {
             number = (int) Math.ceil((float) rightMargin / getScaleWidth());
             group = leftNumber + rightNumber + 1;
             for (int i = 0; i < number; i++) {
-                RulerScaleView view;
-//                if (i == number - 1) {
-//                    view = new RulerScaleView(getContext());
-//                    lp = new LayoutParams(mLineWidth, LayoutParams.WRAP_CONTENT);
-//                    lp.rightMargin = rightMargin - number * getScaleWidth();
-//                    view.setLayoutParams(lp);
-//                } else {
-                    view = generateNormalView();
-//                }
+                RulerScaleView view = generateNormalView();
                 if ((i + count + 1) % group == 0) {
                     view.setProportion(1);
                 } else {

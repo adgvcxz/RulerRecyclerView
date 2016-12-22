@@ -3,7 +3,6 @@ package com.adgvcxz.rulerrecycleriew;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -11,7 +10,7 @@ import android.view.View;
  * Created by zhaowei on 2016/12/15.
  */
 
-public class RulerSnapHelper extends RecyclerView.OnScrollListener {
+class RulerSnapHelper extends RecyclerView.OnScrollListener {
 
     private RecyclerView mRecyclerView;
     private boolean mScrolled = false;
@@ -21,7 +20,7 @@ public class RulerSnapHelper extends RecyclerView.OnScrollListener {
     private OnRulerScrollListener mOnRulerScrollListener;
     private int mLastNumber = -1;
 
-    public void attachToRecyclerView(@Nullable RecyclerView recyclerView, int lineWidth, int scaleWidth, int leftNumber, int rightNumber) {
+    void attachToRecyclerView(@Nullable RecyclerView recyclerView, int lineWidth, int scaleWidth, int leftNumber, int rightNumber) {
         if (recyclerView != null) {
             mRecyclerView = recyclerView;
             recyclerView.addOnScrollListener(this);
@@ -31,16 +30,16 @@ public class RulerSnapHelper extends RecyclerView.OnScrollListener {
         }
     }
 
-    public void setLineAndWidth(int lineWidth, int scaleWidth) {
+    void setLineAndWidth(int lineWidth, int scaleWidth) {
         mScaleWidth = lineWidth + scaleWidth / 2 * 2;
     }
 
-    public void setLeftAndRight(int left, int right) {
+    void setLeftAndRight(int left, int right) {
         mLeftNumber = left;
         mRightNumber = right;
     }
 
-    public void setOnRulerScrollListener(OnRulerScrollListener onRulerScrollListener) {
+    void setOnRulerScrollListener(OnRulerScrollListener onRulerScrollListener) {
         this.mOnRulerScrollListener = onRulerScrollListener;
     }
 

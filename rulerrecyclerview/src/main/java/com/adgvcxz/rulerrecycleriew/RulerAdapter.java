@@ -84,11 +84,6 @@ public class RulerAdapter extends RecyclerView.Adapter {
      */
     private int mTextColor = Color.GRAY;
 
-    /**
-     * 最初需要移动的距离
-     */
-    private int mOriginDistance;
-
     private RulerAdapter() {
         mLeftNumber = (int) (Math.ceil((float) (mGroupNumber - 1) / 2));
         mRightNumber = (int) (Math.floor((float) (mGroupNumber - 1) / 2));
