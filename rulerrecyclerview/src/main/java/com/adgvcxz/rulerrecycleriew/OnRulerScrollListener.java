@@ -7,8 +7,14 @@ package com.adgvcxz.rulerrecycleriew;
 
 public interface OnRulerScrollListener {
 
+    /**
+     * 根据刻度返回刻度值
+     */
     String getScaleValue(int scale);
 
+    /**
+     * 刻度发生变化
+     */
     void onScaleChange(int scale);
 
 }

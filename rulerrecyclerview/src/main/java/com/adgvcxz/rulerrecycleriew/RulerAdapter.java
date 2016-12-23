@@ -240,6 +240,9 @@ public class RulerAdapter extends RecyclerView.Adapter {
                     , mRulerAdapter.mScaleWidth, mRulerAdapter.mLeftNumber, mRulerAdapter.mRightNumber);
         }
 
+        /**
+         * 设置刻度线和刻度的宽度
+         */
         public Builder setLineAndScale(int lineWidth, int scaleWidth) {
             mRulerAdapter.mLineWidth = lineWidth;
             mRulerAdapter.mScaleWidth = scaleWidth;
@@ -247,6 +250,9 @@ public class RulerAdapter extends RecyclerView.Adapter {
             return this;
         }
 
+        /**
+         * 设置刻度的数量，以及多少刻度为一个组
+         */
         public Builder setNumberAndGroup(int number, int groupNumber) {
             mRulerAdapter.mScaleNumber = number;
             mRulerAdapter.mGroupNumber = groupNumber;
@@ -256,33 +262,51 @@ public class RulerAdapter extends RecyclerView.Adapter {
             return this;
         }
 
+        /**
+         * 设置尺子滑动的回调
+         */
         public Builder setOnRulerScrollListener(OnRulerScrollListener listener) {
             mRulerAdapter.mOnRulerScrollListener = listener;
             mRulerSnapHelper.setOnRulerScrollListener(listener);
             return this;
         }
 
+        /**
+         * 设置刻度线的颜色
+         */
         public Builder setScaleLineColor(int color) {
             mRulerAdapter.mScaleLineColor = color;
             return this;
         }
 
+        /**
+         * 是否在边缘显示刻度
+         */
         public Builder setEdge(boolean show) {
             mRulerAdapter.mShowEdge = show;
             return this;
         }
 
+        /**
+         * 设置最初刻度尺的位置
+         */
         public Builder setStartScaleLine(int startScaleLine) {
             mRulerAdapter.mStartScaleLine = startScaleLine;
             return this;
         }
 
+        /**
+         * 是指刻度线的长度百分比
+         */
         public Builder setLineLength(float middle, float normal) {
             mRulerAdapter.mMiddleLine = middle;
             mRulerAdapter.mNormalLine = normal;
             return this;
         }
 
+        /**
+         * 设置刻度值的字体大小和颜色
+         */
         public Builder setTextSizeAndColor(float size, int color) {
             mRulerAdapter.mTextSize = size;
             mRulerAdapter.mTextColor = color;
