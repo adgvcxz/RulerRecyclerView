@@ -10,6 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@android:color/white"
     tools:context="com.adgvcxz.simple.MainActivity">
 
     <RelativeLayout
@@ -24,10 +25,22 @@
             android:paddingTop="4dp" />
 
         <View
+            android:layout_width="128dp"
+            android:layout_height="48dp"
+            android:background="@drawable/gradient_mask" />
+
+        <View
+            android:layout_width="128dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/gradient_mask"
+            android:rotation="180" />
+
+        <View
             android:layout_width="3dp"
             android:layout_height="24dp"
             android:layout_centerHorizontal="true"
-            android:background="#03A9F4" />
+            android:background="@drawable/tag_line" />
     </RelativeLayout>
 
     <TextView
@@ -37,4 +50,6 @@
         android:layout_marginTop="8dp"
         android:textColor="#03A9F4"
         android:textSize="16sp" />
+
+
 </LinearLayout>

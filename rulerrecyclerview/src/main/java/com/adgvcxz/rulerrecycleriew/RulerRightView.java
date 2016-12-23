@@ -13,6 +13,8 @@ class RulerRightView extends RulerBaseItemView {
 
     private int mRightWidth;
 
+    private boolean mInit;
+
     public RulerRightView(Context context) {
         super(context);
     }
@@ -23,6 +25,7 @@ class RulerRightView extends RulerBaseItemView {
 
 
     public void init(int rightWidth, int leftNumber, int remind) {
+        mInit = true;
         int margin = mScaleWidth / 2;
         LayoutParams lp;
         int i = 0;
@@ -71,6 +74,10 @@ class RulerRightView extends RulerBaseItemView {
             }
             linearLayout.addView(view);
         }
+    }
+
+    public boolean isInit() {
+        return mInit;
     }
 
     public void adjustTextView(String str) {

@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements OnRulerScrollList
                 .setScaleLineColor(Color.GRAY)
                 .setStartScaleLine(300).build());
         textView0 = (TextView) findViewById(R.id.ac_text_0);
-        textView0.setText("30.0 Kg");
+        textView0.setText("30.0 kg");
     }
 
     @Override
@@ -49,6 +49,6 @@ public class MainActivity extends AppCompatActivity implements OnRulerScrollList
 
     @Override
     public void onScaleChange(int scale) {
-        textView0.setText(String.format(Locale.getDefault(), "%s Kg", DF0.format((float) (300 + scale) / 10)));
+        textView0.setText(String.format(Locale.getDefault(), "%s kg", DF0.format((float) (300 + scale) / 10)));
     }
 }
