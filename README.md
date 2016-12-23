@@ -25,6 +25,21 @@ recyclerView.setAdapter(new RulerAdapter.Builder(recyclerView).setLineAndScale(l
 
 如果刻度很密集，滑动过程中会些许闪烁，可关闭硬件加速:``recyclerView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);``
 
+##导入
+
+```groovy
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
+
+dependencies {
+	compile 'com.github.adgvcxz:RulerRecyclerView:1.0.0'
+}
+```
+
 ##下一步
 
 * 增加一条中间刻度
