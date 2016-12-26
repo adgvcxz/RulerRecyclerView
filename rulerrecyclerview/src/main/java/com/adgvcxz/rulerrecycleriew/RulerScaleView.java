@@ -9,7 +9,7 @@ import android.view.ViewGroup;
  * Created by zhaowei on 2016/12/20.
  */
 
-public class RulerScaleView extends View {
+class RulerScaleView extends View {
 
     private float mProportion;
     private boolean mMeasure;
