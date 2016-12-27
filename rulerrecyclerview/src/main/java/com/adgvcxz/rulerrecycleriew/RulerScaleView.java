@@ -20,8 +20,13 @@ class RulerScaleView extends View {
 
     public void setProportion(float proportion) {
         mProportion = proportion;
+        requestLayout();
+        postInvalidate();
     }
 
+    public float getProportion() {
+        return mProportion;
+    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

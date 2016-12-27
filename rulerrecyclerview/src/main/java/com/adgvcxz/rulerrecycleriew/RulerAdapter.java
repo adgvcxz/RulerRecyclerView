@@ -35,6 +35,11 @@ public class RulerAdapter extends RecyclerView.Adapter {
     private int mGroupNumber = 10;
 
     /**
+     * 多少个刻度有一个中等长度的刻度线
+     */
+    private int mSecondGroupNumber = 5;
+
+    /**
      * 一共多少刻度
      */
     private int mScaleNumber = 100;
@@ -75,6 +80,11 @@ public class RulerAdapter extends RecyclerView.Adapter {
     private float mNormalLine = 0.5f;
 
     /**
+     * 多少个刻度有一个中等长度的刻度线的高度
+     */
+    private float mSecondLine = 0.75f;
+
+    /**
      * 刻度文字的大小
      */
     private float mTextSize = 12;
@@ -103,17 +113,19 @@ public class RulerAdapter extends RecyclerView.Adapter {
                     final int remind = number == 0 ? mGroupNumber : number;
                     if (mShowEdge) {
                         if (mRulerLeftView != null) {
-                            mRulerLeftView.initWhenEdge(mLeftWidth, mRightNumber, mLeftNumber, mRightNumber, mScaleNumber);
+                            mRulerLeftView.initWhenEdge(mLeftWidth, mRightWidth, mLeftNumber, mRightNumber, mScaleNumber);
                             if (mOnRulerScrollListener != null) {
                                 mRulerLeftView.adjustTextView(mOnRulerScrollListener.getScaleValue(0));
                             }
+                            mRulerLeftView.updateSecondScale(mSecondGroupNumber, mSecondLine);
                             scrollOriginDistance(recyclerView);
                         }
-                        if (mRulerRightView != null) {
+                        if (mRulerRightView != null && !mRulerRightView.isInit()) {
                             mRulerRightView.initWhenEdge(mRightWidth, mLeftNumber, mRightNumber, mScaleNumber, remind);
                             if (remind >= mRightNumber && mOnRulerScrollListener != null) {
                                 mRulerRightView.adjustTextView(mOnRulerScrollListener.getScaleValue((getItemCount() - 1) * mGroupNumber));
                             }
+                            mRulerRightView.updateSecondScale(mScaleNumber, mLeftNumber, mRightNumber, mSecondGroupNumber, mSecondLine);
                         }
                     } else {
                         if (mRulerLeftView != null) {
@@ -121,13 +133,15 @@ public class RulerAdapter extends RecyclerView.Adapter {
                             if (mOnRulerScrollListener != null) {
                                 mRulerLeftView.adjustTextView(mOnRulerScrollListener.getScaleValue(0));
                             }
+                            mRulerLeftView.updateSecondScale(mSecondGroupNumber, mSecondLine);
                             scrollOriginDistance(recyclerView);
                         }
-                        if (mRulerRightView != null) {
+                        if (mRulerRightView != null && !mRulerRightView.isInit()) {
                             mRulerRightView.init(mRightWidth, mLeftNumber, remind);
                             if (remind >= mRightNumber && mOnRulerScrollListener != null) {
                                 mRulerRightView.adjustTextView(mOnRulerScrollListener.getScaleValue((getItemCount() - 1) * mGroupNumber));
                             }
+                            mRulerRightView.updateSecondScale(mScaleNumber, mLeftNumber, mRightNumber, mSecondGroupNumber, mSecondLine);
                         }
                     }
                 }
@@ -152,7 +166,9 @@ public class RulerAdapter extends RecyclerView.Adapter {
         } else if (viewType == RIGHT_SPACING) {
             mRulerRightView = new RulerRightView(parent.getContext(), mScaleLineColor, mLineWidth, mScaleWidth, mMiddleLine, mNormalLine);
             mRulerRightView.setTextSizeAndColor(mTextSize, mTextColor);
-            if (!mRulerRightView.isInit()) {
+            if (!mRulerRightView.isInit() && parent.getWidth() > 0) {
+                mLeftWidth = parent.getWidth() / 2 - parent.getPaddingLeft();
+                mRightWidth = parent.getWidth() / 2 - parent.getPaddingRight();
                 int number = (mScaleNumber - mRightNumber) % mGroupNumber;
                 final int remind = number == 0 ? mGroupNumber : number;
                 if (mShowEdge) {
@@ -160,11 +176,13 @@ public class RulerAdapter extends RecyclerView.Adapter {
                     if (remind >= mRightNumber && mOnRulerScrollListener != null) {
                         mRulerRightView.adjustTextView(mOnRulerScrollListener.getScaleValue((getItemCount() - 1) * mGroupNumber));
                     }
+                    mRulerRightView.updateSecondScale(mScaleNumber, mLeftNumber, mRightNumber, mSecondGroupNumber, mSecondLine);
                 } else {
                     mRulerRightView.init(mRightWidth, mLeftNumber, remind);
                     if (remind >= mRightNumber && mOnRulerScrollListener != null) {
                         mRulerRightView.adjustTextView(mOnRulerScrollListener.getScaleValue((getItemCount() - 1) * mGroupNumber));
                     }
+                    mRulerRightView.updateSecondScale(mScaleNumber, mLeftNumber, mRightNumber, mSecondGroupNumber, mSecondLine);
                 }
             }
             return new RecyclerView.ViewHolder(mRulerRightView) {
@@ -180,7 +198,23 @@ public class RulerAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (mOnRulerScrollListener != null && getItemViewType(position) == LINE) {
+        int type = getItemViewType(position);
+        if (mSecondGroupNumber > 0) {
+            switch (type) {
+                case LINE:
+                    ((RulerItemView) holder.itemView).resetLine();
+                    int startScale = mRightNumber + 1;
+                    int start = startScale + (position - 1) * mGroupNumber;
+                    for (int i = 0; i < mGroupNumber; i++) {
+                        if (i != mLeftNumber + 1 && (start + i) % mSecondGroupNumber == 0) {
+                            ((RulerItemView) holder.itemView).updateSecondLine(i);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        if (mOnRulerScrollListener != null && type == LINE) {
             String str = mOnRulerScrollListener.getScaleValue(position * mGroupNumber);
             ((RulerItemView) holder.itemView).adjustTextView(str);
         }
@@ -310,6 +344,15 @@ public class RulerAdapter extends RecyclerView.Adapter {
         public Builder setTextSizeAndColor(float size, int color) {
             mRulerAdapter.mTextSize = size;
             mRulerAdapter.mTextColor = color;
+            return this;
+        }
+
+        /**
+         * 设置第二刻度的间隔和长度
+         */
+        public Builder setSecondScale(int groupNumber, float length) {
+            mRulerAdapter.mSecondGroupNumber = groupNumber;
+            mRulerAdapter.mSecondLine = length;
             return this;
         }
 

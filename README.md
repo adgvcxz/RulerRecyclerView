@@ -4,6 +4,7 @@
 * 超轻量
 * 更多的自定义选项
 * 监听刻度变化
+* 可单独为每个刻度设置间隔已经长度(目前有三种刻度可设置)
 * 简单易用，扩展性高
 
 ##预览
@@ -18,6 +19,7 @@ recyclerView.setAdapter(new RulerAdapter.Builder(recyclerView).setLineAndScale(l
                 .setOnRulerScrollListener(this)
                 .setLineLength(0.9f, 0.5f)
                 .setTextSizeAndColor(12, Color.GRAY)
+                .setSecondScale(5, 0.75f)
                 .setEdge(true)
                 .setScaleLineColor(Color.GRAY)
                 .setStartScaleLine(300).build());
@@ -36,7 +38,7 @@ allprojects {
 }
 
 dependencies {
-	compile 'com.github.adgvcxz:RulerRecyclerView:1.0.0'
+	compile 'com.github.adgvcxz:RulerRecyclerView:1.1.0'
 }
 ```
 
@@ -44,6 +46,19 @@ dependencies {
 
 * 增加一条中间刻度
 * 支持垂直方向
+
+##更新日志
+
+####1.1.0:
+
+* 修复主要是在刻度很少的情况下，右边界与左边界出现显示异常
+* 修复主要刻度如果为奇数时，右边界宽度有1像素出入
+* 新增一条中间刻度，可自由设置中间刻度的间隔已经长度，类似于支持上5cm处
+
+
+####1.0.0:
+
+* 基本完成一把尺子的所有功能
 
 ## LICENSE
 

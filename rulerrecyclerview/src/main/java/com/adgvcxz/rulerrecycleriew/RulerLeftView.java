@@ -2,6 +2,7 @@ package com.adgvcxz.rulerrecycleriew;
 
 import android.content.Context;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -52,9 +53,9 @@ class RulerLeftView extends RulerBaseItemView {
             RulerScaleView view;
             view = generateNormalView();
             if (i % group == offset) {
-                view.setProportion(1);
+                view.setProportion(mMiddleLength);
             } else {
-                view.setProportion(0.5f);
+                view.setProportion(mNormalLength);
             }
             mScaleLeftLayout.addView(view);
         }
@@ -66,11 +67,39 @@ class RulerLeftView extends RulerBaseItemView {
             for (int i = 0; i < number; i++) {
                 RulerScaleView view = generateNormalView();
                 if ((i + count + 1) % group == 0) {
-                    view.setProportion(1);
+                    view.setProportion(mMiddleLength);
                 } else {
-                    view.setProportion(0.5f);
+                    view.setProportion(mNormalLength);
                 }
                 linearLayout.addView(view);
+            }
+        }
+    }
+
+    public void updateSecondScale(int group, float lineLength) {
+        int leftNumber = mScaleLeftLayout.getChildCount();
+        for (int i = leftNumber - 1; i >= 0; i--) {
+            RulerScaleView rulerScaleView = ((RulerScaleView) mScaleLeftLayout.getChildAt(i));
+            if ((leftNumber - i) % group == 0 && rulerScaleView.getProportion() != mMiddleLength) {
+                rulerScaleView.setProportion(lineLength);
+            }
+        }
+        int rightNumber = mScaleRightLayout.getChildCount();
+        for (int i = 0; i < rightNumber; i++) {
+            View view = mScaleRightLayout.getChildAt(i);
+            if (view instanceof LinearLayout) {
+                LinearLayout layout = (LinearLayout) view;
+                for (; i < layout.getChildCount() + rightNumber - 1; i++) {
+                    RulerScaleView rulerScaleView = ((RulerScaleView) layout.getChildAt(i - rightNumber + 1));
+                    if ((i + 1) % group == 0 && rulerScaleView.getProportion() == mNormalLength) {
+                        rulerScaleView.setProportion(lineLength);
+                    }
+                }
+            } else if (view instanceof RulerScaleView) {
+                RulerScaleView rulerScaleView = (RulerScaleView) view;
+                if ((i + 1) % group == 0 && rulerScaleView.getProportion() == mNormalLength) {
+                    ((RulerScaleView) view).setProportion(lineLength);
+                }
             }
         }
     }

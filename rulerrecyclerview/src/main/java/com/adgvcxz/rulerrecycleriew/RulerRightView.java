@@ -29,7 +29,6 @@ class RulerRightView extends RulerBaseItemView {
         int margin = mScaleWidth / 2;
         LayoutParams lp;
         int i = 0;
-
         for (; i < remind && i < leftNumber; i++) {
             mScaleLeftLayout.addView(generateNormalView());
             mRightWidth += (mLineWidth + margin * 2);
@@ -46,7 +45,7 @@ class RulerRightView extends RulerBaseItemView {
         for (; i < remind; i++) {
             mScaleRightLayout.addView(generateNormalView());
         }
-        lp = new LayoutParams((rightWidth - mLineWidth / 2) - margin, LayoutParams.MATCH_PARENT);
+        lp = new LayoutParams((int) ((rightWidth - Math.ceil(mLineWidth / 2.0f)) - margin), LayoutParams.MATCH_PARENT);
         LinearLayout view = new LinearLayout(getContext());
         mScaleRightLayout.addView(view, lp);
     }
@@ -68,11 +67,40 @@ class RulerRightView extends RulerBaseItemView {
                 view = generateNormalView();
             }
             if ((i + count + 1) % group == 0) {
-                view.setProportion(1);
+                view.setProportion(mMiddleLength);
             } else {
-                view.setProportion(0.5f);
+                view.setProportion(mNormalLength);
             }
             linearLayout.addView(view);
+        }
+    }
+
+    public void updateSecondScale(int count, int leftNumber, int rightNumber, int group, float lineLength) {
+        int position = count - (count - rightNumber - 1) % (leftNumber + rightNumber + 1);
+        for (int i = 0; i < mScaleLeftLayout.getChildCount(); i++) {
+            RulerScaleView rulerScaleView = (RulerScaleView) mScaleLeftLayout.getChildAt(i);
+            if (position % group == 0 && rulerScaleView.getProportion() == mNormalLength) {
+                rulerScaleView.setProportion(lineLength);
+            }
+            position++;
+        }
+        int rightChild = mScaleRightLayout.getChildCount();
+        for (int i = 0; i < rightChild; i++) {
+            View view = mScaleRightLayout.getChildAt(i);
+            if (view instanceof LinearLayout) {
+                LinearLayout layout = (LinearLayout) view;
+                for (; i < layout.getChildCount() + rightChild - 1; i++) {
+                    RulerScaleView rulerScaleView = ((RulerScaleView) layout.getChildAt(i - rightChild + 1));
+                    if ((i + 1) % group == 0 && rulerScaleView.getProportion() == mNormalLength) {
+                        rulerScaleView.setProportion(lineLength);
+                    }
+                }
+            } else if (view instanceof RulerScaleView) {
+                RulerScaleView rulerScaleView = (RulerScaleView) view;
+                if ((i + 1) % group == 0 && rulerScaleView.getProportion() == mNormalLength) {
+                    ((RulerScaleView) view).setProportion(lineLength);
+                }
+            }
         }
     }
 

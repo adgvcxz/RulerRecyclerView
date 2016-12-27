@@ -41,4 +41,26 @@ class RulerItemView extends RulerBaseItemView {
             mScaleTextView.setText(str);
         }
     }
+
+    public void updateSecondLine(int position) {
+        if (position < mScaleLeftLayout.getChildCount()) {
+            if (mScaleLeftLayout.getChildAt(position) instanceof RulerScaleView) {
+                ((RulerScaleView) mScaleLeftLayout.getChildAt(position)).setProportion(0.7f);
+            }
+        } else if (position > mScaleLeftLayout.getChildCount()) {
+            position = position - mScaleLeftLayout.getChildCount() - 1;
+            if (mScaleRightLayout.getChildAt(position) instanceof RulerScaleView) {
+                ((RulerScaleView) mScaleRightLayout.getChildAt(position)).setProportion(0.7f);
+            }
+        }
+    }
+
+    public void resetLine() {
+        for (int i = 0; i < mScaleLeftLayout.getChildCount(); i++) {
+            ((RulerScaleView) mScaleLeftLayout.getChildAt(i)).setProportion(mNormalLength);
+        }
+        for (int i = 0; i < mScaleRightLayout.getChildCount(); i++) {
+            ((RulerScaleView) mScaleRightLayout.getChildAt(i)).setProportion(mNormalLength);
+        }
+    }
 }

@@ -33,10 +33,12 @@ public class MainActivity extends AppCompatActivity implements OnRulerScrollList
                 .setNumberAndGroup(2700, 10)
                 .setOnRulerScrollListener(this)
                 .setLineLength(0.9f, 0.5f)
+                .setSecondScale(5, 0.75f)
                 .setTextSizeAndColor(12, Color.GRAY)
                 .setEdge(true)
                 .setScaleLineColor(Color.GRAY)
-                .setStartScaleLine(10).build());
+                .setStartScaleLine(10)
+                .build());
         textView0 = (TextView) findViewById(R.id.ac_text_0);
         textView0.setText("30.0 kg");
     }
