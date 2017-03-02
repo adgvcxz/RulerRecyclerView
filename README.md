@@ -2,9 +2,9 @@
 ## 一个超轻量的Adapter实现一个尺子
 
 * 超轻量
-* 更多的自定义选项
+* 更多的自定义选项(颜色，长度，间隔等)
 * 监听刻度变化
-* 可单独为每个刻度设置间隔已经长度(目前有三种刻度可设置)
+* 可单独为每个刻度设置间隔以及长度(目前有三种刻度长度可设置)
 * 简单易用，扩展性高
 
 ##预览
@@ -18,14 +18,15 @@ recyclerView.setAdapter(new RulerAdapter.Builder(recyclerView).setLineAndScale(l
                 .setNumberAndGroup(2700, 10)
                 .setOnRulerScrollListener(this)
                 .setLineLength(0.9f, 0.5f)
-                .setTextSizeAndColor(12, Color.GRAY)
                 .setSecondScale(5, 0.75f)
+                .setTextSizeAndColor(12, Color.GRAY)
                 .setEdge(true)
                 .setScaleLineColor(Color.GRAY)
-                .setStartScaleLine(300).build());
+                .setStartScaleLine(10)
+                .build());
 ```
 
-如果刻度很密集，滑动过程中会些许闪烁，可关闭硬件加速:``recyclerView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);``
+如果刻度很密集，滑动过程中会有些许闪烁，可关闭硬件加速:``recyclerView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);``
 
 ##导入
 
@@ -44,7 +45,6 @@ dependencies {
 
 ##下一步
 
-* 增加一条中间刻度
 * 支持垂直方向
 
 ##更新日志
